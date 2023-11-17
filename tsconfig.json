@@ -8,5 +8,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-, "components/home/welcome.jsx"  ]
+, "components/home/welcome.jsx", "components/camera/CameraScreen.jsx"  ]
 }
