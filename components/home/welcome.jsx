@@ -29,6 +29,7 @@ const Welcome = () => {
 
   const redirectToCamera = () => {
     console.log('Open Camera')
+    router.push('/camera/camera');
   }
 
   const colorScheme = useColorScheme();
