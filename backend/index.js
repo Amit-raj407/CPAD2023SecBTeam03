@@ -2,18 +2,19 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
+require('dotenv').config();
 
 
 app.use(cors());
 
-const PORT = 3000;
+const PORT = parseInt(process.env.PORT, 10);
 
 // Need to use Environment Variable to store the uri, as it should not be exposed
-// const uri = 'mongodb+srv://AmitRaj:AmitRaj123@cluster0.yog8h5r.mongodb.net/test';
-const uri = 'mongodb+srv://amitrajraj241:<password>@cluster0.pz0mxff.mongodb.net/cookitup';
+// edit: stored in environment variable
+const uri = process.env.MONGO_DB_URI;
 
 
-const taskRoutes = require('./routes/prompts.js');
+const routes = require('./routes/prompts.js');
 
 
 app.use(express.json());
@@ -27,7 +28,7 @@ app.get('/test', (req, res) => {
     res.json({ message: "test" });
 })
 
-app.use('/tasks', taskRoutes);
+app.use('/prompts', routes);
 
 app.get('/**', (req, res) => {
     res.json({ message: "404" });
