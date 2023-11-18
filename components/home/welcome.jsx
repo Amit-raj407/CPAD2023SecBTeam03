@@ -9,6 +9,7 @@ import {
   useColorScheme,
 } from "react-native";
 import { useRouter } from "expo-router";
+import axios from 'axios';
 
 import styles from "./welcome.style";
 import { COLORS, icons, SIZES } from "../../constants";
@@ -16,6 +17,8 @@ import { COLORS, icons, SIZES } from "../../constants";
 
 const Welcome = () => {
   const router = useRouter();
+
+  const apiUrl = 'http://localhost:3000/prompts/getRecipe';
 
   const welcomeTagLine = `"Say Cheese to Cooking Ease"`
   const welcomeBodyMessage = `No more guesswork in the kitchen. Our app takes the mystery out of ingredients and turns you into a gourmet chef`;
@@ -25,6 +28,28 @@ const Welcome = () => {
   const handleSearch = () => {
     // API request with search text
     console.log('Searching for:', searchText);
+    const requestBody = {
+      searchQuery: searchText,
+      type: 'String',
+    };
+
+    axios.post(apiUrl, {
+      params: requestBody,  // Include the request body as parameters
+      headers: {
+        // Include any headers if needed
+        'Content-Type': 'application/json',
+        // Add other headers as needed
+      },
+    }).then(response => {
+      // Handle successful response
+      console.log('Response:', response);
+    })
+    .catch(error => {
+      // Handle error
+      console.error('Error:', error);
+    });
+
+
   };
 
   const redirectToCamera = () => {
