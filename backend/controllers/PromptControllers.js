@@ -1,77 +1,39 @@
 const mongoose = require("mongoose");
 const History = require("../models/history");
+const axios = require('axios');
+require('dotenv').config();
 
-const getTasks = async (req, res) => {
-  await Task.find()
-    .then((tasks) => {
+const getRecipe = async (req, res) => {
+  console.log(req)
+  let prompt = "" + req
+
+  const options = {
+    method: 'GET',
+    timeout: 10000,
+    url: process.env.LLM_API,
+    params: {
+      prompt: prompt
+    },
+    headers: {
+      'X-RapidAPI-Key': process.env.LLM_API_KEY,
+      'X-RapidAPI-Host': process.env.LLM_HOST
+    }
+  };
+
+  try {
+      const response = await axios.request(options);
+      console.log(response.data);
       res.status(200).json({
-        message: "Task fetched successfully",
-        data: tasks,
-      });
-    })
-    .catch((err) => {
-      res.status(500).json({
-        err: err.message,
-      });
-    });
+        message: "Data Updated",
+        data: response.data
+      })
+  } catch (error) {
+      console.error(error);
+      res.status(error.code).json({
+        message: "Error",
+        data: error
+      })
+  }
 };
 
-const addTasks = async (req, res) => {
-  await Task.create({
-    title: req.body.title,
-    isCompleted: req.body.isCompleted,
-    dueDate: req.body.dueDate,
-    priority: req.body.priority
-  }).then((data) => {
-    res.status(201).json({
-        message: "Data added successfully",
-        data: data
-    })
-  }).catch((err) => {
-    res.status(500).json({
-        err: err.message
-    });
-  })
-};
-
-const updateTask = async ( req, res) => {
-  await Task.findByIdAndUpdate(req.params.id, req.body, { new: true }).then((task) => {
-    res.status(200).json({
-      message: "Data Updated",
-      data: task
-    })
-  }).catch((err) => {
-    res.status(500).json({
-      err: err.message
-    });
-  });
-}
-
-const deleteTask = async (req, res) => {
-  await Task.deleteOne({_id: req.params.id}).then((data) => {
-    res.status(200).json({
-      message: "Data deleted",
-      data: data
-    });
-  }).catch(err => {
-    res.status(500).json({
-      message: err.message
-    })
-  })
-
-};
-
-const findTaskById = async (req, res) => {
-  await Task.findById(req.params.id).then((data) => {
-    res.status(200).json({
-      message: "Data found",
-      data: data
-    })
-  }).catch(err => {
-    res.status(500).json({
-      message: err.message
-    })
-  });
-};
-
-module.exports = { getTasks, addTasks, updateTask, deleteTask, findTaskById };
+module.exports = { getRecipe };
