@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Task = require("../models/prompts");
+const History = require("../models/history");
 
 const getTasks = async (req, res) => {
   await Task.find()
