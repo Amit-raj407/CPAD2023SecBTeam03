@@ -8,6 +8,7 @@ const historySchema = new Schema({
     request: {
         required: true,
         type: String,
+        default: 'To be Generated'
     },
     status: {
         // tells the current status of the request processing

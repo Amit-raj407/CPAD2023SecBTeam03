@@ -2,9 +2,33 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { Camera } from 'expo-camera';
+import axios from 'axios';
 
 import styles from "./CameraScreen.style";
 import { COLORS, icons } from "../../constants";
+
+const apiUrl = 'http://localhost:3000/prompts/getRecipeFromImage';
+
+const sendPhotoToBackend = async (photo) => {
+  const formData = new FormData();
+  formData.append('photo', {
+    uri: photo.uri,
+    type: 'image/jpeg',
+    name: 'photo.jpg',
+  });
+
+  try {
+    const response = await axios.post(apiUrl, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    // Handle the response from the backend as needed.
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const CameraScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -21,6 +45,7 @@ const CameraScreen = () => {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync();
       console.log('Photo:', photo);
+      sendPhotoToBackend(photo);
     }
   };
 
