@@ -7,10 +7,8 @@ require('dotenv').config();
 
 app.use(cors());
 
-const PORT = parseInt(process.env.PORT, 10);
+const PORT = process.env.PORT || 3000;
 
-// Need to use Environment Variable to store the uri, as it should not be exposed
-// edit: stored in environment variable
 const uri = process.env.MONGO_DB_URI;
 
 
@@ -22,10 +20,6 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
     res.json({ message: "Home" });
-})
-
-app.get('/test', (req, res) => {
-    res.json({ message: "test" });
 })
 
 app.use('/prompts', routes);
