@@ -76,33 +76,31 @@ const getRecipe = async (req, res) => {
     let searchQuery = params.searchQuery;
     let featureFlag = params.type;
 
-    let id;
+    try {
+        const savedRecord = await History.create({
+            request: searchQuery
+        });
 
-    await History.create({
-        request: searchQuery
-    }).then(async result => {
-        console.log('History Initialized');
-        id = result._id;
         res.status(axios.HttpStatusCode.Created).json({
-            res: new ApiResponse(result, axios.HttpStatusCode.Created)
+            res: new ApiResponse(savedRecord, axios.HttpStatusCode.Created)
         })
-    }).catch(error => {
-        res.status(axios.HttpStatusCode.InternalServerError).json({
-            res: new ApiResponse(error, axios.HttpStatusCode.InternalServerError)
-        })
-    });
 
-    if(featureFlag === 'image') {
-        console.log('Image Processing');
-        searchQuery = await imageProcessing(id);
+        if(featureFlag === 'image') {
+            console.log('Image Processing');
+            searchQuery = await imageProcessing(savedRecord._id);
+        }
+    
+        let prompt = "Given a list of labels containing various items, some of which may be edible, please analyze the shelf life and suitability for consumption of the ingredients (avoiding mouldy, rotten, expired food), and then recommend a set of edible ingredients. Once you've identified the edible items, suggest detailed recipes that can be prepared using these ingredients. Ensure that the selected recipes are not only safe to eat but also delicious and practical. Please ignore non-food items. Additionally, take into account the shelf life of the food items listed, ignore rotten food and only consider those that are suitable to eat. Ignore if they are not safe for consumption. Once you have chosen the edible ingredients, suggest creative and tasty recipes that can be prepared with them. Your recipes should consider the combination of these ingredients and provide step-by-step instructions on how to make a delicious dish."
+            + searchQuery
+    
+        console.log('prompt sent to LLM');
+        const response = await sendPromptToLLM(prompt, savedRecord._id);
+        console.log(response);
+        
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-
-    let prompt = "Given a list of labels containing various items, some of which may be edible, please analyze the shelf life and suitability for consumption of the ingredients (avoiding mouldy, rotten, expired food), and then recommend a set of edible ingredients. Once you've identified the edible items, suggest detailed recipes that can be prepared using these ingredients. Ensure that the selected recipes are not only safe to eat but also delicious and practical. Please ignore non-food items. Additionally, take into account the shelf life of the food items listed, ignore rotten food and only consider those that are suitable to eat. Ignore if they are not safe for consumption. Once you have chosen the edible ingredients, suggest creative and tasty recipes that can be prepared with them. Your recipes should consider the combination of these ingredients and provide step-by-step instructions on how to make a delicious dish."
-        + searchQuery
-
-    console.log('prompt sent to LLM');
-    const response = await sendPromptToLLM(prompt, id);
-    console.log(response);
 };
 
 module.exports = { getRecipe };
