@@ -7,10 +7,11 @@ import axios from 'axios';
 import styles from "./CameraScreen.style";
 import { COLORS, icons } from "../../constants";
 
-const apiUrl = 'https://glamorous-tan-pangolin.cyclic.app/prompts/getRecipe';
+// const apiUrl = 'https://glamorous-tan-pangolin.cyclic.app/prompts/getRecipe';
+const apiUrl = 'http://10.207.128.244:3000/prompts/getRecipe';
 const cloudinaryUrl = 'https://api.cloudinary.com/v1_1/dyh2a0lou/image/upload'
-const sendPhotoToBackend = async (photo) => {
 
+const sendPhotoToBackend = async (photo) => {
   const formData = new FormData();
   formData.append('file', photo);
   formData.append('upload_preset', 'CookItUp');
@@ -35,7 +36,7 @@ const sendPhotoToBackend = async (photo) => {
       },
     }).then(response => {
       // Handle successful response
-      console.log('Response:', response);
+      console.log(response.data.res.responseBody);
     })
     .catch(error => {
       // Handle error
