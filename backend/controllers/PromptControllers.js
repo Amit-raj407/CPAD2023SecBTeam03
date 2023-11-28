@@ -78,6 +78,8 @@ const getRecipe = async (req, res) => {
     let searchQuery = params.searchQuery;
     let featureFlag = params.type;
 
+    console.log(searchQuery, featureFlag);
+
     try {
         const savedRecord = await History.create({
             request: searchQuery
