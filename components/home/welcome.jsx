@@ -18,7 +18,7 @@ import { COLORS, icons, SIZES } from "../../constants";
 const Welcome = () => {
   const router = useRouter();
 
-  const apiUrl = 'http://localhost:3000/prompts/getRecipe';
+  const apiUrl = 'http://10.207.128.244:3000/prompts/getRecipe';
 
   const welcomeTagLine = `"Say Cheese to Cooking Ease"`
   const welcomeBodyMessage = `No more guesswork in the kitchen. Our app takes the mystery out of ingredients and turns you into a gourmet chef`;
@@ -42,7 +42,11 @@ const Welcome = () => {
       },
     }).then(response => {
       // Handle successful response
-      console.log('Response:', response);
+      console.log(response.data.res.responseBody);
+      router.push({
+        pathname: 'response/response',
+        params: response.data.res.responseBody
+      })
     })
     .catch(error => {
       // Handle error

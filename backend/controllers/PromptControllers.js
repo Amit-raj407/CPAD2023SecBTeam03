@@ -3,6 +3,9 @@ const History = require("../models/history");
 const axios = require('axios');
 require('dotenv').config();
 
+
+
+
 const ApiResponse = require('../models/Response');
 const status = require('../enums/Status');
 
@@ -28,8 +31,8 @@ const sendPromptToLLM = async (prompt, id) => {
     }
     try {
         const response = await axios.request(options);
-        result.data = response.data
-        result.statusCode = response.status
+        result.data = response?.data
+        result.statusCode = response?.status
 
         console.log('LLM Response Generated');
 
@@ -40,8 +43,8 @@ const sendPromptToLLM = async (prompt, id) => {
             resolve(result)
         })
     } catch (error) {
-        result.data = error.response.data.message
-        result.statusCode = error.response.status
+        result.data = error?.response?.data?.message
+        result.statusCode = error?.response?.status
         return new Promise(reject => {
             reject(result)
         })
@@ -49,7 +52,7 @@ const sendPromptToLLM = async (prompt, id) => {
 }
 
 // TODO
-const imageProcessing = async (filePath, id) => {
+const imageProcessing = async (imageUrl, id) => {
     // Image Processing
         // Use filePath to get the image
     // ------------------------
@@ -78,6 +81,8 @@ const getRecipe = async (req, res) => {
     let searchQuery = params.searchQuery;
     let featureFlag = params.type;
 
+    // featureFlag can be "String" or "Image"
+
     console.log(searchQuery, featureFlag);
 
     try {
@@ -89,31 +94,9 @@ const getRecipe = async (req, res) => {
             res: new ApiResponse(savedRecord, axios.HttpStatusCode.Created)
         })
 
-        let prompt = "Given a list of labels containing various items, some of which may be edible, please analyze the shelf life and suitability for consumption of the ingredients (avoiding mouldy, rotten, expired food), and then recommend a set of edible ingredients. Once you've identified the edible items, suggest detailed recipes that can be prepared using these ingredients. Ensure that the selected recipes are not only safe to eat but also delicious and practical. Please ignore non-food items. Additionally, take into account the shelf life of the food items listed, ignore rotten food and only consider those that are suitable to eat. Ignore if they are not safe for consumption. Once you have chosen the edible ingredients, suggest creative and tasty recipes that can be prepared with them. Your recipes should consider the combination of these ingredients and provide step-by-step instructions on how to make a delicious dish."
-            + searchQuery
-
-        console.log('prompt sent to LLM');
-        const response = await sendPromptToLLM(prompt, savedRecord._id);
-        console.log(response);
-
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-};
-
-const getRecipeByImage = async (req, res) => {
-    const filePath = req.file.path;
-
-    try {
-        const savedRecord = await History.create({});
-
-        res.status(axios.HttpStatusCode.Created).json({
-            res: new ApiResponse(savedRecord, axios.HttpStatusCode.Created)
-        })
-
-        console.log('Image Processing');
-        const searchQuery = await imageProcessing(filePath, savedRecord._id);
+        if(featureFlag === 'Image') {
+            searchQuery = await imageProcessing(searchQuery, savedRecord._id);
+        }
 
         let prompt = "Given a list of labels containing various items, some of which may be edible, please analyze the shelf life and suitability for consumption of the ingredients (avoiding mouldy, rotten, expired food), and then recommend a set of edible ingredients. Once you've identified the edible items, suggest detailed recipes that can be prepared using these ingredients. Ensure that the selected recipes are not only safe to eat but also delicious and practical. Please ignore non-food items. Additionally, take into account the shelf life of the food items listed, ignore rotten food and only consider those that are suitable to eat. Ignore if they are not safe for consumption. Once you have chosen the edible ingredients, suggest creative and tasty recipes that can be prepared with them. Your recipes should consider the combination of these ingredients and provide step-by-step instructions on how to make a delicious dish."
             + searchQuery
@@ -128,4 +111,18 @@ const getRecipeByImage = async (req, res) => {
     }
 };
 
-module.exports = { getRecipe, getRecipeByImage };
+const getRecipeById = async (req, res) => {
+    await History.findById(req.params.id).then((data) => {
+      res.status(200).json({
+        message: "Data found",
+        data: data
+      })
+    }).catch(err => {
+      res.status(500).json({
+        message: err.message
+      })
+    });
+  };
+
+
+module.exports = { getRecipe, getRecipeById };

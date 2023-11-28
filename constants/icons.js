@@ -9,6 +9,7 @@ import location from "../assets/icons/location.png";
 import chevronLeft from '../assets/icons/chevron-left.png'
 import chevronRight from '../assets/icons/chevron-right.png'
 import camera from '../assets/icons/camera-icon.png'
+import refresh from '../assets/icons/Refresh.png';
 
 export default {
   heart,
@@ -21,5 +22,6 @@ export default {
   location,
   chevronLeft,
   chevronRight,
-  camera
+  camera,
+  refresh
 };
