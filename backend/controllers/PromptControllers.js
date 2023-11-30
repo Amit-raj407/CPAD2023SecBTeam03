@@ -113,16 +113,33 @@ const getRecipe = async (req, res) => {
 
 const getRecipeById = async (req, res) => {
     await History.findById(req.params.id).then((data) => {
-      res.status(200).json({
-        message: "Data found",
-        data: data
-      })
+        res.status(200).json({
+            message: "Data found",
+            data: data
+        })
     }).catch(err => {
-      res.status(500).json({
-        message: err.message
-      })
+        res.status(500).json({
+            message: err.message
+        })
     });
-  };
+};
+
+const getAllRecipes = async (req, res) => {
+    try {
+        const latestData = await History.find({})
+          .sort({ createdDate: -1 }) 
+          .limit(10); 
+    
+        res.status(200).json({
+            message: "Data found",
+            data: latestData
+        })
+      } catch (error) {
+        res.status(500).json({
+            message: err.message
+        })
+      }
+};
 
 
-module.exports = { getRecipe, getRecipeById };
+module.exports = { getRecipe, getRecipeById, getAllRecipes };
