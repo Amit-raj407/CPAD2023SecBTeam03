@@ -7,10 +7,13 @@ import axios from 'axios';
 import styles from "./CameraScreen.style";
 import { COLORS, icons } from "../../constants";
 import URL from '../../constants/url';
+import { useRouter } from 'expo-router';
 
 // const apiUrl = 'https://glamorous-tan-pangolin.cyclic.app/prompts/getRecipe';
 const apiUrl = URL.baseURL+'/prompts/getRecipe';
 const cloudinaryUrl = 'https://api.cloudinary.com/v1_1/dyh2a0lou/image/upload'
+
+const router = useRouter();
 
 const sendPhotoToBackend = async (photo) => {
   const formData = new FormData();
@@ -38,6 +41,10 @@ const sendPhotoToBackend = async (photo) => {
     }).then(response => {
       // Handle successful response
       console.log(response.data.res.responseBody);
+      router.push({
+        pathname: 'response/response',
+        params: response.data.res.responseBody
+      })
     })
     .catch(error => {
       // Handle error

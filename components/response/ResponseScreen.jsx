@@ -5,6 +5,7 @@ import styles from "./ResponseScreen.style";
 import { COLORS, icons } from "../../constants";
 import axios from 'axios';
 import URL from '../../constants/url';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const ResponseScreen = (props) => {
 
@@ -25,28 +26,29 @@ const ResponseScreen = (props) => {
         })
     }
 
-    useEffect(() => {
-        console.log("Hello", props)
-        console.log(props.props);
-        console.log(recipeId);
-    }, [])
     return (
         <View style={styles.container}>
-            <TouchableOpacity
-                style={styles.button}
-                onPress={handleRefresh}
-            >
-                <Image
-                    source={icons.refresh}
-                    resizeMode='contain'
-                    style={styles.buttonText}
-                />
-            </TouchableOpacity>
-            <Text style={styles.text}>Hello Chef</Text>
-            <Text style={styles.text}>{recipe.llmResponse}</Text>
-            <View style={styles.status}>
-                <Text style={styles.text}>Current Status: {recipe.status}</Text>
-            </View>
+            { recipe.status !== 'RESPONSE GENERATED' && (
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={handleRefresh}
+                >
+                    <Image
+                        source={icons.refresh}
+                        resizeMode='contain'
+                        style={styles.buttonText}
+                    />
+                </TouchableOpacity>
+            )}
+            <Text style={styles.text}>Hello Chef! 🧑🏼‍🍳</Text>
+            <ScrollView style={{ marginTop: 20, marginBottom: 20 }} showsVerticalScrollIndicator={false}>
+                <Text style={styles.llmResponse}>{recipe.llmResponse}</Text>
+                { recipe.status !== 'RESPONSE GENERATED' && (
+                    <View style={styles.status}>
+                        <Text style={styles.text}>Current Status: {recipe.status}</Text>
+                    </View>
+                ) }
+            </ScrollView>
         </View>
     )
 }

@@ -72,9 +72,9 @@ export default function TabTwoScreen() {
     return (
       <Animated.View style={[styles.item, {transform:[{scale}]}]}>
         <TouchableOpacity onPress={handleItemPress}>
-        <View style={styles.wrapText}>
-          <Text style={styles.fontSize}>{item.request}</Text>
-        </View>
+          <View style={styles.wrapText}>
+            <Text style={styles.fontSize}>{item.request}</Text>
+          </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.favoriteButton}>
           <Image
@@ -95,12 +95,12 @@ export default function TabTwoScreen() {
           value={searchQuery}
           onChangeText={(text) => setSearchQuery(text)}
         />
-        <TouchableOpacity style={styles.button}>
+        {/* <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Filter</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Sort</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       {isLoading ? (
         <ActivityIndicator />
@@ -132,9 +132,10 @@ const styles = StyleSheet.create({
     fontSize: 18
   },
   wrapText: {
-    flex: 1,
+    flex: 0.8,
     marginLeft: 10,
-    justifyContent: "center"
+    justifyContent: "center",
+    paddingRight: 50
   },
   item: {
     flexDirection: 'row',
@@ -148,8 +149,8 @@ const styles = StyleSheet.create({
           width: 2,
           height: 10,
         },
-        shadowOpacity: 0.5,
-        shadowRadius: 20,
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
       },
       android: {
         elevation: 20,
@@ -161,7 +162,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 5,
     right: 5,
-    padding: 10,
+    padding: 7,
+    flex: 0.2,
+    justifyContent: 'center',
   },
   heartIcon: {
     width: 20,
@@ -170,7 +173,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     height: "100%",
-    width: "50%",
+    width: "90%",
     borderColor: 'gray',
     borderWidth: 1,
     margin: "2%",
@@ -195,5 +198,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     margin: 10,
+    justifyContent: 'center'
   },
 });

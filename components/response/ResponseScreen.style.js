@@ -6,16 +6,21 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         width: "100%",
-        padding: "10%",
+        padding: "5%",
         backgroundColor: COLORS.lightWhite
     },
     text: {
        
-            fontFamily: FONT.bold,
-            fontSize: SIZES.xLarge,
-            color: COLORS.primary,
-            marginTop: 2,
-        
+        fontFamily: FONT.bold,
+        fontSize: SIZES.xLarge,
+        color: COLORS.primary,
+        marginTop: 2,    
+    },
+    llmResponse: {
+        fontFamily: FONT.medium,
+        fontSize: SIZES.large,
+        color: COLORS.primary,
+        marginTop: 2,   
     },
     button: {
         width: '40%',
