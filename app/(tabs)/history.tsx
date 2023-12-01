@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from "expo-router";
 import { StyleSheet, Image, TextInput, TouchableOpacity, ActivityIndicator, Platform, Animated } from 'react-native';
 import { Text, View } from '../../components/Themed';
-import {historyMockData} from "../../mock/History";
+import URL from '../../constants/url';
+
 
 interface RecipeHistory {
-  id: string;
-  queryString: string;
-  isFavorite?: boolean;
-  recipe: {
-    name: string;
-    description: string;
-    ingredients: string;
-    instructions: string;
-  }[];
-  createdAt: string;
+  _id: string;
+  request: string;
+  status: string;
+  llmResponse: string;
+  createdDate: string;
+  isFavorite:boolean;
 }
 
-const BG_IMG = "https://cdn.pixabay.com/photo/2016/11/19/11/38/avocado-1838785_1280.jpg";
 const ITEM_MARGIN_BOTTOM = 20;
 const ITEM_PADDING = 10;
 export default function TabTwoScreen() {
@@ -26,17 +23,18 @@ export default function TabTwoScreen() {
   const [filteredData, setFilteredData] = useState<RecipeHistory[]>([]); // New state for filtered data
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setData(historyMockData.response);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setIsLoading(false);
-      }
+        const apiUrl = URL.baseURL+'/prompts/getAllRecipes';
+        fetch(apiUrl)
+        .then((res) =>res.json())
+        .then((resJson) =>{setData(resJson.data)})
+        .catch((error) => {
+          console.log("Request API Error: ", error);
+        }).finally(() => setIsLoading(false));
+
     };
 
     fetchData();
@@ -48,7 +46,7 @@ export default function TabTwoScreen() {
 
   const filterData = () => {
     const lowerCaseQuery = searchQuery.toLowerCase();
-    const filtered = data.filter((item) => item.recipe[0].name.toLowerCase().includes(lowerCaseQuery));
+    const filtered = data.filter((item) => item.request.toLowerCase().includes(lowerCaseQuery));
     setFilteredData(filtered);
   };
 
@@ -63,11 +61,21 @@ export default function TabTwoScreen() {
       outputRange : [1, 1, 1, 0]
     })
 
+    const handleItemPress = () => {
+      console.log("press");
+      router.push({
+        pathname: '../response/response',
+        params: item as any,
+      })
+    };
+
     return (
       <Animated.View style={[styles.item, {transform:[{scale}]}]}>
+        <TouchableOpacity onPress={handleItemPress}>
         <View style={styles.wrapText}>
-          <Text style={styles.fontSize}>{item.recipe[0].name}</Text>
+          <Text style={styles.fontSize}>{item.request}</Text>
         </View>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.favoriteButton}>
           <Image
             source={item.isFavorite ? require('../../assets/icons/heart.png') : require('../../assets/icons/heart-ol.png')}
@@ -99,7 +107,7 @@ export default function TabTwoScreen() {
       ) : (
         <Animated.FlatList
         data={filteredData} // Use filteredData instead of data
-        keyExtractor={(item) => `${item.id}`}
+        keyExtractor={(item) => `${item._id}`}
           renderItem={renderItem}
           contentContainerStyle={{
             padding: 20
@@ -156,23 +164,26 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   heartIcon: {
-    width: 30,
-    height: 30,
+    width: 20,
+    height: 20,
     tintColor: 'red',
   },
   searchInput: {
-    height: 40,
+    height: "100%",
+    width: "50%",
     borderColor: 'gray',
     borderWidth: 1,
-    margin: 10,
-    paddingLeft: 30,
+    margin: "2%",
+    paddingLeft: "5%",
     backgroundColor: 'white',
     borderRadius: 50,
-    width: 250
   },
   button: {
-    paddingLeft: 10,
-    padding: 10,
+    paddingLeft: "5%",
+    paddingRight: "5%",
+    marginLeft: "5%",
+    width: 'auto',
+    padding: "3%",
     borderRadius: 50,
     backgroundColor: 'pink',
     alignItems: 'center',
