@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from "expo-router";
 import { StyleSheet, Image, TextInput, TouchableOpacity, ActivityIndicator, Platform, Animated } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import URL from '../../constants/url';
+
 
 interface RecipeHistory {
   _id: string;
@@ -21,6 +23,7 @@ export default function TabTwoScreen() {
   const [filteredData, setFilteredData] = useState<RecipeHistory[]>([]); // New state for filtered data
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,7 +46,6 @@ export default function TabTwoScreen() {
 
   const filterData = () => {
     const lowerCaseQuery = searchQuery.toLowerCase();
-    console.log(data);
     const filtered = data.filter((item) => item.request.toLowerCase().includes(lowerCaseQuery));
     setFilteredData(filtered);
   };
@@ -59,11 +61,21 @@ export default function TabTwoScreen() {
       outputRange : [1, 1, 1, 0]
     })
 
+    const handleItemPress = () => {
+      console.log("press");
+      router.push({
+        pathname: '../response/response',
+        params: item as any,
+      })
+    };
+
     return (
       <Animated.View style={[styles.item, {transform:[{scale}]}]}>
+        <TouchableOpacity onPress={handleItemPress}>
         <View style={styles.wrapText}>
           <Text style={styles.fontSize}>{item.request}</Text>
         </View>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.favoriteButton}>
           <Image
             source={item.isFavorite ? require('../../assets/icons/heart.png') : require('../../assets/icons/heart-ol.png')}
