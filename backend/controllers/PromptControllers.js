@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
 const History = require("../models/history");
 const axios = require('axios');
+const vision = require('@google-cloud/vision');
 require('dotenv').config();
-
-
 
 
 const ApiResponse = require('../models/Response');
@@ -13,8 +12,7 @@ const status = require('../enums/Status');
 const sendPromptToLLM = async (prompt, id) => {
     const options = {
         method: 'GET',
-        timeout: 30000,
-        // url: 'https://jsonplaceholder.typicode.com/posts',
+        timeout: 60000,
         url: process.env.LLM_API,
         params: {
             prompt: prompt
@@ -51,12 +49,25 @@ const sendPromptToLLM = async (prompt, id) => {
     }
 }
 
-// TODO
 const imageProcessing = async (imageUrl, id) => {
-    // Image Processing
-        // Use filePath to get the image
-    // ------------------------
-    const searchQuery = 'Onion, Potato'
+    let searchQuery = ""
+    // Creates a client
+    const client = new vision.ImageAnnotatorClient({
+        keyFilename: './APIKey.json'
+    });
+
+    const [result] = await client.objectLocalization(imageUrl);
+    const objects = result.localizedObjectAnnotations;
+    objects.forEach(object => {
+        searchQuery = searchQuery + object.name + ", "
+        console.log(`Name: ${object.name}`);
+        console.log(`Confidence: ${object.score}`);
+        const vertices = object.boundingPoly.normalizedVertices;
+        vertices.forEach(v => console.log(`x: ${v.x}, y:${v.y}`));
+    });
+
+    // const searchQuery = 'Onion, Potato'
+    console.log(searchQuery)
     await updateHistoryDB({ id: id, status: status.IMAGE_PROCESSED, request: searchQuery });
     console.log("Image Processed");
     return searchQuery;
@@ -94,6 +105,7 @@ const getRecipe = async (req, res) => {
             res: new ApiResponse(savedRecord, axios.HttpStatusCode.Created)
         })
 
+        // searchQuery can have image url directly
         if(featureFlag === 'Image') {
             searchQuery = await imageProcessing(searchQuery, savedRecord._id);
         }
