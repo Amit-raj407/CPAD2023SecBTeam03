@@ -4,6 +4,7 @@ import styles from "./ResponseScreen.style";
 
 import { COLORS, icons } from "../../constants";
 import axios from 'axios';
+import URL from '../../constants/url';
 
 const ResponseScreen = (props) => {
 
@@ -14,7 +15,7 @@ const ResponseScreen = (props) => {
     //     setRecipe(newRecipe);
     // }
 
-    const apiUrl = 'http://10.207.128.244:3000/prompts/getRecipeById'
+    const apiUrl = URL.baseURL+'/prompts/getRecipeById'
 
     const handleRefresh = () => {
         axios.get(`${apiUrl}/${recipeId}`).then((response) => {

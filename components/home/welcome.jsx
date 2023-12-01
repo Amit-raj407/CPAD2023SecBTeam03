@@ -13,12 +13,13 @@ import axios from 'axios';
 
 import styles from "./welcome.style";
 import { COLORS, icons, SIZES } from "../../constants";
+import URL from '../../constants/url';
 
 
 const Welcome = () => {
   const router = useRouter();
 
-  const apiUrl = 'http://10.207.128.244:3000/prompts/getRecipe';
+  const apiUrl = URL.baseURL+'/prompts/getRecipe';
 
   const welcomeTagLine = `"Say Cheese to Cooking Ease"`
   const welcomeBodyMessage = `No more guesswork in the kitchen. Our app takes the mystery out of ingredients and turns you into a gourmet chef`;
