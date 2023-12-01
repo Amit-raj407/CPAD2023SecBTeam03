@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "resonant-rock-406811",
+  "private_key_id": "cd8197ce5f42331c49bbd8a358244da23281ffa8",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCXDTUTGp4vn5L2\n8CapxWcuo854bzKhyx0XCD8sHjSJRsWMMJ1bCNjVduZsKqGm5c/s4x52bL+3uhZH\noapyYJ0yD317WKaMTYTHns10T6Zhz3lIu6QvzPqekS2IMWOlVSEgmOKMCiDmU0ls\nEyg8KR7cyp8vE6MNhvMxq6u6JZl0roZzBj42Tu9FMCFJJev7SRHkXQs8bl3TTnzL\niZVoxOZ/95nJT73TpVUMl3Ci+n7PFowkI+GMiyb9qMxTbMHDx3ej0xVE8AOPTNwo\nBpRpjr7d/pKjfRi9a5GwZk5knBizXc+gqZ9rCzBtuMJjZjfH4gStnwB11KNYz+sL\n5On6hQgZAgMBAAECggEABjEh6FcSffRGI35Dr3jqmmRXneM9CZnYZu3NHSNd1vTC\nO1Vw1d7+eH2nw25Z8wv/on/K62LY1xC3Qhdz871XJEqzQ5+mMCErXL17QZXURbUq\nDRu4BseZzG86FRelNI1RTtNFkiUGJTrryxTb9N9gpv9dWCIvcGoERRh68SYCbOB8\nd6B1TjJeny4CibxjLNtTY3bMV9g4AkHlMgdkHRL/JBk+F+KV1t++din4Q67wBmfk\nzyuXIiEDrVfuTcSTQDLT2JBv8zVZpYH99kpu8wNQIRDLYhRHao0NzVjY6ZlVhiwC\n9j3q4XY3OLNGqeTAhqPTjapjlSO9cO/+hy6C6iE3swKBgQDQEOUt2EqYWvqaj3O2\nsSvCuaG33tp//u8NREUDRAFvdLMIL5tlQemg0IN3ZyW8dqdpQu+KljaJ2XsN+/qh\n+FFT2Z7bqf7Om5OEnXLqA+22/Djt1vkWV1LjNB4XOL2U15GN2hJ46XTlxt3boKRz\ndD1aXGMwpyD9GqC7/eIoZ7OYfwKBgQC52cZB/84KcF3cgwGL7wQU0jA4ANpxlLo0\ngK88YoB0ahgAdarX1ar+/9xIW8g1YH51KFlU2Ey5H3OT9zaQvIp68azcxxTDqgz2\nggK0aF4TO6/HfzgQCqrTImh+mOgUgpoSxeMiLpRF5S0B/3cpWIRkCnAOLD8+T5TE\ngJhCTG7TZwKBgQCcRPQ8GIT+JOaviyp3fl3FpLJnbQNiutBEgI/swfjqAxYsAcWO\nqZCU7cavuVLIV72o+1L6HZPcuPEJMcWuPNioR3xeszDjcEm9gpu6UzUJCCqhx6HR\nO8jPSGeJPV52GeoCRlU1ZvIbWd9rgx3AcP9bjKQa+It4TbWHPEnN2wUydQKBgHyv\nXhNpSxI10MLgIWmAMXzGhxMLf4I0BbiznN0mOIfhpbipOLUU5GOvxFnHOcqVskFn\nkIcbll2cfC4I7NKtqzpQaWi1J3kd3RSEpMvkOTkuEgAFmdcpUPHVY8WLUChydmuh\n14BXP6Kk3k041vkmKav0VLktdkCXo3cxzvSr0q6BAoGAJt1hK06/0TVzMogTlwKS\n6KNRx29X6H374vQl2WRj1QcqS+A6yQaMtkkTQsMCWrHP8ow0Be2hbTYwMu73x6jS\nFyyuEdV3Mw1Gazq8eYfG2vZzvGeIQl9drIOVWNT4LtoybyDz+YWC7QRuIjWGs6wL\ns/sb0L8CrekJl44LDh6E9U0=\n-----END PRIVATE KEY-----\n",
+  "client_email": "ingredient-recognition@resonant-rock-406811.iam.gserviceaccount.com",
+  "client_id": "108865709283558787458",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/ingredient-recognition%40resonant-rock-406811.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
