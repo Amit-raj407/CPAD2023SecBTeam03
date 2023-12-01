@@ -1,11 +1,11 @@
 # CPAD2023SecBTeam03
 CPAD2023SecBTeam03
 
-# Recipe Recommendation Cooking App
+# Cook It Up: The Recipe Recommendation Cooking App
 
 ## Introduction
 
-Welcome to the Recipe Recommendation Cooking App! This cross-platform application is designed for users who want to create delicious meals using the ingredients they have on hand. The app leverages the power of Large Language Models (LLMs) and image recognition technology to identify edible ingredients from images provided by the user and then recommends detailed recipes based on these ingredients.
+Welcome to the Cook It Up: The Recipe Recommendation App! This cross-platform application is designed for users who want to create delicious meals using the ingredients they have on hand. The app leverages the power of Large Language Models (LLMs) and image recognition technology to identify edible ingredients from images provided by the user and then recommends detailed recipes based on these ingredients.
 
 ## Features
 
@@ -35,7 +35,7 @@ git clone <repository-url>
 2. Change to the project directory.
 
 ```bash
-cd recipe-recommendation-app
+cd cook-it-up
 ```
 
 3. Install project dependencies.
@@ -44,13 +44,20 @@ cd recipe-recommendation-app
 npm install
 ```
 
-4. Start the development server.
+4. Start the server for front-end at the root location.
 
 ```bash
 npm start
 ```
 
-5. Follow the on-screen instructions to open the app on an emulator or physical device.
+5. Start the backend server in a different terminal.
+
+```bash
+cd backend
+npm start
+```
+
+6. Follow the on-screen instructions to open the app on an emulator or physical device.
 
 ## Usage
 
@@ -88,4 +95,4 @@ If you have any questions or need assistance, feel free to reach out to us at [2
 
 ---
 
-Thank you for using the Recipe Recommendation Cooking App. We hope you enjoy cooking delicious meals with the ingredients you have on hand. Happy cooking!
+Thank you for using the Cook It Up App. We hope you enjoy cooking delicious meals with the ingredients you have on hand. Happy cooking!
