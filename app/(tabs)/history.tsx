@@ -24,11 +24,11 @@ export default function TabTwoScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
 
+  const apiUrl = URL.baseURL+'/prompts/getAllRecipes';
+
   useEffect(() => {
     const fetchData = async () => {
 
-        const apiUrl = URL.baseURL+'/prompts/getAllRecipes';
-        
         fetch(apiUrl)
         .then((res) =>res.json())
         .then((resJson) =>{
@@ -110,6 +110,21 @@ export default function TabTwoScreen() {
     );
   }
 
+  const refreshData = () => {
+    fetch(apiUrl)
+      .then((res) =>res.json())
+      .then((resJson) =>{
+        const recipesWithFavorites: RecipeHistory[] = resJson.data.map((recipe: RecipeHistory) => ({
+          ...recipe,
+          isFavorite: false,
+        }));
+        setData(recipesWithFavorites);
+      })
+      .catch((error) => {
+        console.log("Request API Error: ", error);
+      }).finally(() => setIsLoading(false));
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
@@ -119,6 +134,9 @@ export default function TabTwoScreen() {
           value={searchQuery}
           onChangeText={(text) => setSearchQuery(text)}
         />
+        <TouchableOpacity onPress={refreshData}>
+          <Text>Refresh</Text>
+        </TouchableOpacity>
       </View>
       {filteredData.length > 0 ? (
         <Animated.FlatList
@@ -198,7 +216,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     height: "100%",
-    width: "90%",
+    width: "80%",
     borderColor: 'gray',
     borderWidth: 1,
     margin: "2%",

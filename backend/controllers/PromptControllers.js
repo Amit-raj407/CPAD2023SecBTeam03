@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const History = require("../models/history");
 const axios = require('axios');
 const vision = require('@google-cloud/vision');
+const NodeCache = require('node-cache');
+const cache = new NodeCache();
 require('dotenv').config();
 
 
@@ -34,9 +36,11 @@ const sendPromptToLLM = async (prompt, id) => {
 
         console.log('LLM Response Generated');
 
-        await updateHistoryDB({ id: id, status: status.RESPONSE_GENERATED, llmResponse: result.data });
+        const updatedData = await updateHistoryDB({ id: id, status: status.RESPONSE_GENERATED, llmResponse: result.data });
         console.log('History DB updated')
 
+        cache.set(updatedData.request, result.data);
+        console.log(cache);
         return new Promise(resolve => {
             resolve(result)
         })
@@ -81,7 +85,7 @@ const imageProcessing = async (imageUrl, id) => {
 }
 
 const updateHistoryDB = async (patchEntity) => {
-    await History.findByIdAndUpdate(patchEntity.id, patchEntity, { new: true }).then(response => {
+    return await History.findByIdAndUpdate(patchEntity.id, patchEntity, { new: true }).then(response => {
         console.log(response);
         return new Promise(resolve => {
             resolve(response)
@@ -101,6 +105,20 @@ const getRecipe = async (req, res) => {
 
     // featureFlag can be "String" or "Image"
 
+
+    if(featureFlag === "String") {
+        const cachedData = cache.get(searchQuery);
+        console.log(cachedData, featureFlag);
+        if(cachedData !== undefined) {
+            console.log(cachedData);
+            res.status(axios.HttpStatusCode.Ok).json({
+                res: new ApiResponse({llmResponse: cachedData, status: status.RESPONSE_GENERATED}, axios.HttpStatusCode.OK)
+            })
+            return;
+        }
+    }
+
+
     console.log(searchQuery, featureFlag);
 
     try {
@@ -116,6 +134,10 @@ const getRecipe = async (req, res) => {
         if(featureFlag === 'Image') {
             searchQuery = await imageProcessing(searchQuery, savedRecord._id);
         }
+
+        cache.set(searchQuery, 'Response Not Generated');
+
+        console.log(cache)
 
         searchQuery = searchQuery.replace(/packaged\s+goods|packed\s+goods/gi, '');
         let prompt = "Recommend delicious recipes using edible ingredients with a suitable shelf life from the provided list of labels. Identify items safe for consumption, excluding those expired, rotten, or non-edible. If no edible ingredients are found, prompt: 'Your list contains no edible ingredients. Please re-send the query.' List = "
