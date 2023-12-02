@@ -4,7 +4,6 @@ import { StyleSheet, Image, TextInput, TouchableOpacity, ActivityIndicator, Plat
 import { Text, View } from '../../components/Themed';
 import URL from '../../constants/url';
 
-
 interface RecipeHistory {
   _id: string;
   request: string;
@@ -27,17 +26,25 @@ export default function TabTwoScreen() {
 
   useEffect(() => {
     const fetchData = async () => {
+
         const apiUrl = URL.baseURL+'/prompts/getAllRecipes';
+        
         fetch(apiUrl)
         .then((res) =>res.json())
-        .then((resJson) =>{setData(resJson.data)})
+        .then((resJson) =>{
+          const recipesWithFavorites: RecipeHistory[] = resJson.data.map((recipe: RecipeHistory) => ({
+            ...recipe,
+            isFavorite: false,
+          }));
+          setData(recipesWithFavorites);
+        })
         .catch((error) => {
           console.log("Request API Error: ", error);
         }).finally(() => setIsLoading(false));
-
     };
 
     fetchData();
+
   }, []);
 
   useEffect(() => {
@@ -51,7 +58,7 @@ export default function TabTwoScreen() {
   };
 
   const renderItem = ({ item, index }: { item: RecipeHistory; index: number }) => {
-    
+
     const scale = scrollY.interpolate({
       inputRange: [
         -1, 0,
@@ -62,21 +69,30 @@ export default function TabTwoScreen() {
     })
 
     const handleItemPress = () => {
-      console.log("press");
+
       router.push({
         pathname: '../response/response',
         params: item as any,
       })
+
+    };
+
+    const handleFavIcon = () => {
+      setData((prevData) =>
+        prevData.map((recipe: RecipeHistory) =>
+          recipe._id === item._id ? { ...recipe, isFavorite: !recipe.isFavorite } : recipe
+        )
+      );
     };
 
     return (
-      <Animated.View style={[styles.item, {transform:[{scale}]}]}>
+      <Animated.View style={[styles.item, { transform: [{ scale }] }]}>
         <TouchableOpacity onPress={handleItemPress}>
           <View style={styles.wrapText}>
             <Text style={styles.fontSize}>{item.request}</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.favoriteButton}>
+        <TouchableOpacity style={styles.favoriteButton} onPress={handleFavIcon}>
           <Image
             source={item.isFavorite ? require('../../assets/icons/heart.png') : require('../../assets/icons/heart-ol.png')}
             style={styles.heartIcon}
@@ -85,6 +101,14 @@ export default function TabTwoScreen() {
       </Animated.View>
     );
   };
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -95,34 +119,35 @@ export default function TabTwoScreen() {
           value={searchQuery}
           onChangeText={(text) => setSearchQuery(text)}
         />
-        {/* <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Filter</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Sort</Text>
-        </TouchableOpacity> */}
       </View>
-      {isLoading ? (
-        <ActivityIndicator />
-      ) : (
+      {filteredData.length > 0 ? (
         <Animated.FlatList
-        data={filteredData} // Use filteredData instead of data
-        keyExtractor={(item) => `${item._id}`}
+          data={filteredData}
+          keyExtractor={(item) => `${item._id}`}
           renderItem={renderItem}
           contentContainerStyle={{
             padding: 20
           }}
-          onScroll = { 
+          onScroll={
             Animated.event(
-              [{nativeEvent : {contentOffset: {y: scrollY}}}],
-              {useNativeDriver: true}
+              [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+              { useNativeDriver: true }
             )
           }
         />
+      ) : (
+        <View style={styles.emptyListContainer}>
+          <Image
+            source={require('../../assets/images/rabbitNoRecipe.png')}
+            style={styles.recipeNotPresent}
+          />
+          <Text style={styles.emptyListText}>No recipes? No problem! Let's start creating some culinary magic together.</Text>
+        </View>
       )}
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -181,23 +206,26 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 50,
   },
-  button: {
-    paddingLeft: "5%",
-    paddingRight: "5%",
-    marginLeft: "5%",
-    width: 'auto',
-    padding: "3%",
-    borderRadius: 50,
-    backgroundColor: 'pink',
-    alignItems: 'center',
-  },
-  buttonText: {
-    fontWeight: 'bold',
-  },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     margin: 10,
     justifyContent: 'center'
   },
+  emptyListContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyListText: {
+    fontSize: 16,
+    color: 'gray',
+    fontFamily: 'cursive',
+    width: "80%",
+    fontWeight: 'bold', 
+  },
+  recipeNotPresent: {
+    width: "50%",
+    height: "27%",
+  }
 });
