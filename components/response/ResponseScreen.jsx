@@ -12,10 +12,6 @@ const ResponseScreen = (props) => {
     const [recipeId, setRecipeId] = useState(props.props._id);
     const [recipe, setRecipe] = useState(props.props);
 
-    // const updateRecipe = () => {
-    //     setRecipe(newRecipe);
-    // }
-
     const apiUrl = URL.baseURL+'/prompts/getRecipeById'
 
     const handleRefresh = () => {

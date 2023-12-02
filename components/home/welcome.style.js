@@ -120,6 +120,12 @@ const styles = StyleSheet.create({
     fontFamily: FONT.medium,
     color: activeJobType === item ? COLORS.secondary : COLORS.gray2,
   }),
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)', // Adjust the overlay color and opacity
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
 
 export default styles;
