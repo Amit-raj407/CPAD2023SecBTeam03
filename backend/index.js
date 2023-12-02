@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
+const helmet = require('helmet');
 require('dotenv').config();
 
 
@@ -16,7 +17,7 @@ const routes = require('./routes/prompts.js');
 
 
 app.use(express.json());
-
+app.use(helmet());
 
 app.get('/', (req, res) => {
     res.json({ message: "Home" });

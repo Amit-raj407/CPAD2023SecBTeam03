@@ -117,10 +117,12 @@ const getRecipe = async (req, res) => {
             searchQuery = await imageProcessing(searchQuery, savedRecord._id);
         }
 
-        let prompt = "Given a list of labels containing various items, some of which may be edible, please analyze the shelf life and suitability for consumption of the ingredients (avoiding mouldy, rotten, expired food), and then recommend a set of edible ingredients. Once you've identified the edible items, suggest detailed recipes that can be prepared using these ingredients. Ensure that the selected recipes are not only safe to eat but also delicious and practical. Please ignore non-food items. Additionally, take into account the shelf life of the food items listed, ignore rotten food and only consider those that are suitable to eat. Ignore if they are not safe for consumption. Once you have chosen the edible ingredients, suggest creative and tasty recipes that can be prepared with them. Your recipes should consider the combination of these ingredients and provide step-by-step instructions on how to make a delicious dish."
+        searchQuery = searchQuery.replace(/packaged\s+goods|packed\s+goods/gi, '');
+        let prompt = "Recommend delicious recipes using edible ingredients with a suitable shelf life from the provided list of labels. Identify items safe for consumption, excluding those expired, rotten, or non-edible. If no edible ingredients are found, prompt: 'Your list contains no edible ingredients. Please re-send the query.' List = "
             + searchQuery
 
         console.log('prompt sent to LLM');
+        console.log(searchQuery);
         const response = await sendPromptToLLM(prompt, savedRecord._id);
         console.log(response);
 
