@@ -4,7 +4,6 @@ import { StyleSheet, Image, TextInput, TouchableOpacity, ActivityIndicator, Plat
 import { Text, View } from '../../components/Themed';
 import URL from '../../constants/url';
 
-
 interface RecipeHistory {
   _id: string;
   request: string;
@@ -27,17 +26,25 @@ export default function TabTwoScreen() {
 
   useEffect(() => {
     const fetchData = async () => {
+
         const apiUrl = URL.baseURL+'/prompts/getAllRecipes';
+        
         fetch(apiUrl)
         .then((res) =>res.json())
-        .then((resJson) =>{setData(resJson.data)})
+        .then((resJson) =>{
+          const recipesWithFavorites: RecipeHistory[] = resJson.data.map((recipe: RecipeHistory) => ({
+            ...recipe,
+            isFavorite: false,
+          }));
+          setData(recipesWithFavorites);
+        })
         .catch((error) => {
           console.log("Request API Error: ", error);
         }).finally(() => setIsLoading(false));
-
     };
 
     fetchData();
+
   }, []);
 
   useEffect(() => {
@@ -69,6 +76,14 @@ export default function TabTwoScreen() {
       })
     };
 
+    const handleFavIcon = () => {
+      setData((prevData) =>
+        prevData.map((recipe: RecipeHistory) =>
+          recipe._id === item._id ? { ...recipe, isFavorite: !recipe.isFavorite } : recipe
+      )
+  );
+    };
+
     return (
       <Animated.View style={[styles.item, {transform:[{scale}]}]}>
         <TouchableOpacity onPress={handleItemPress}>
@@ -76,7 +91,7 @@ export default function TabTwoScreen() {
             <Text style={styles.fontSize}>{item.request}</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.favoriteButton}>
+        <TouchableOpacity style={styles.favoriteButton} onPress={handleFavIcon}>
           <Image
             source={item.isFavorite ? require('../../assets/icons/heart.png') : require('../../assets/icons/heart-ol.png')}
             style={styles.heartIcon}
