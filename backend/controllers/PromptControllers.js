@@ -43,7 +43,7 @@ const sendPromptToLLM = async (prompt, id) => {
     } catch (error) {
         result.data = error?.response?.data?.message
         result.statusCode = error?.response?.status
-        await updateHistoryDB({ id: id, status: status.ERROR_IN_GPT_RESPONSE, llmResponse: result.data });
+        await updateHistoryDB({ id: id, status: status.ERROR_IN_GPT_RESPONSE, llmResponse: "Sorry! Your request can't be processed at this moment. Please try again later." });
         console.log('History DB updated')
         return new Promise(reject => {
             reject(result)
