@@ -134,8 +134,8 @@ export default function TabTwoScreen() {
           value={searchQuery}
           onChangeText={(text) => setSearchQuery(text)}
         />
-        <TouchableOpacity onPress={refreshData}>
-          <Text>Refresh</Text>
+        <TouchableOpacity onPress={refreshData} style={styles.button}>
+          <Text style={styles.buttonText}>Refresh</Text>
         </TouchableOpacity>
       </View>
       {filteredData.length > 0 ? (
@@ -245,5 +245,17 @@ const styles = StyleSheet.create({
   recipeNotPresent: {
     width: "50%",
     height: "27%",
+  },
+  button: {
+    backgroundColor: 'pink',
+    padding: 10,
+    borderRadius: 50,
+    alignItems: 'center',
+
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   }
 });
