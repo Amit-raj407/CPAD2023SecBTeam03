@@ -124,10 +124,10 @@ const CameraScreen = () => {
             </View>
           )}
           <View style={styles.buttonPreviewContainer}>
-            <TouchableOpacity style={styles.buttonPreview} onPress={retakePicture}>
+            <TouchableOpacity style={styles.retakeButton} onPress={retakePicture}>
               <Text style={styles.buttonPreviewText}>Retake</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonPreview} onPress={submitPicture}>
+            <TouchableOpacity style={styles.submitButton} onPress={submitPicture}>
               <Text style={styles.buttonPreviewText}>Submit</Text>
             </TouchableOpacity>
           </View>
