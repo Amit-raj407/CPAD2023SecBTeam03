@@ -12,9 +12,8 @@ import { useRouter } from 'expo-router';
 const apiUrl = URL.baseURL + '/prompts/getRecipe';
 const cloudinaryUrl = 'https://api.cloudinary.com/v1_1/dyh2a0lou/image/upload'
 
-const router = useRouter();
-
 const CameraScreen = () => {
+  const router = useRouter();
   const [hasPermission, setHasPermission] = useState(null);
   const [isPreviewVisible, setPreviewVisible] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
