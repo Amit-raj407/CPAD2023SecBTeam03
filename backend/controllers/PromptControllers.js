@@ -12,6 +12,23 @@ const ApiResponse = require('../models/Response');
 const status = require('../enums/Status');
 
 
+function processLLMResponse(llmResponse) {
+    console.log("INSIDE PROCESS RESPONSE\nLLM Response = ", llmResponse)
+    let lines_o = llmResponse.split('\n').map(line => line.trim());
+    if (lines_o .length > 1) {
+        const firstLine = lines_o[0].trim();
+        const firstWord = firstLine.split(' ')[0].toLowerCase();
+        const allowedWords = ['Your', 'Sorry', 'Identified'];
+
+        if (!allowedWords.includes(firstWord)) {
+            lines_o[0] = '';
+            lines_o[1] = '';
+        }
+        return lines_o.join('\n');
+    }
+    return llmResponse;
+}
+
 function removeSpecialChars(str) {
   return str.replace(/[^\w\s]/gi, ''); // This regex matches any character that is not a word character or a space
 }
@@ -32,8 +49,8 @@ const processQuery = async (searchQuery) => {
     console.log(nouns);
     const nounsWithoutSpecialChars = nouns.map(str => removeSpecialChars(str));
     let lowercaseQueries = nounsWithoutSpecialChars.map(str => str.toLowerCase()).sort();
-    const commaSeparatedString = lowercaseQueries.join(', ');
-    return commaSeparatedString;
+    lowercaseQueries = [...new Set(lowercaseQueries)];
+    return lowercaseQueries.join(', ');
 }
 
 const sendPromptToLLM = async (prompt, id) => {
@@ -58,6 +75,7 @@ const sendPromptToLLM = async (prompt, id) => {
         const response = await axios.request(options);
         result.data = response?.data
         result.statusCode = response?.status
+        result.data = processLLMResponse(result.data);
 
         console.log('LLM Response Generated');
 
@@ -157,11 +175,11 @@ const getRecipe = async (req, res) => {
             searchQuery = await imageProcessing(searchQuery, savedRecord._id);
         }
         searchQuery = await processQuery(searchQuery);
-        console.log(searchQuery)
+        console.log("AFTER PROCESSING QUERY = ", searchQuery);
 
         cache.set(searchQuery, 'Response Not Generated');
 
-        let prompt = "Recommend delicious recipes using edible ingredients with a suitable shelf life from the provided list of labels. Identify items safe for consumption, excluding those expired, rotten, or non-edible. If no edible ingredients are found, prompt: 'Your list contains no edible ingredients. Please re-send the query.' List = "
+        let prompt = "Please answer in the following format: Identified Ingredients:, \n\nAdditional Ingredients Needed:, \n\nRecipe Name:, \n\nRecipe Instructions:. Recommend delicious recipes using edible ingredients with a suitable shelf life from the provided list of labels. Identify items safe for consumption, excluding those expired, rotten, or non-edible. If and only if no edible ingredients are found, prompt: 'Your list contains no edible ingredients. Please re-send the query.' List = "
             + searchQuery
 
         console.log('prompt sent to LLM');
