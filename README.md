@@ -23,7 +23,7 @@ Before you begin, ensure you have the following software and tools installed:
 
 - Node.js and npm (Node Package Manager)
 - React Native development environment (Expo, React Native CLI, etc.)
-- Expo Go application installed in your mobile device
+- Expo Go application installed in your mobile device (https://play.google.com/store/search?q=expo+go&c=apps&hl=en-IN)
 
 ### Installation
 
