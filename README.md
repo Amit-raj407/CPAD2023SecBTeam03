@@ -23,6 +23,7 @@ Before you begin, ensure you have the following software and tools installed:
 
 - Node.js and npm (Node Package Manager)
 - React Native development environment (Expo, React Native CLI, etc.)
+- Expo Go application installed in your mobile device
 
 ### Installation
 
@@ -61,8 +62,8 @@ npm start
 
 ## Usage
 
-1. Open the app on your device.
-
+1. Open Expo Go app in your mobile, and scan the QR Code visible in the front-end terminal. Wait for the bundling to complete. Once done, you are ready to use the app.
+  
 2. Take a picture of the ingredients you have.
 
 3. The app will use image recognition to identify edible ingredients and filter out non-food items.
@@ -88,6 +89,10 @@ We welcome contributions to this project. If you'd like to add new features, fix
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+## Restrictions
+
+The LLM API that is being used only offers 10 free API calls per day. Kindly keep that in view while using the application.
 
 ## Contact
 
