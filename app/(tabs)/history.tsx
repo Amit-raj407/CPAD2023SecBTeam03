@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import { StyleSheet, Image, TextInput, TouchableOpacity, ActivityIndicator, Platform, Animated } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import URL from '../../constants/url';
+import { FONT } from '../../constants';
 
 interface RecipeHistory {
   _id: string;
@@ -238,7 +239,7 @@ const styles = StyleSheet.create({
   emptyListText: {
     fontSize: 16,
     color: 'gray',
-    fontFamily: 'cursive',
+    fontFamily: FONT.medium,
     width: "80%",
     fontWeight: 'bold', 
   },
