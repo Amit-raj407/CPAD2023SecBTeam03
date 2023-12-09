@@ -3,6 +3,7 @@ const History = require("../models/history");
 const axios = require('axios');
 const vision = require('@google-cloud/vision');
 const NodeCache = require('node-cache');
+var pos = require('pos');
 const cache = new NodeCache();
 require('dotenv').config();
 
@@ -10,6 +11,30 @@ require('dotenv').config();
 const ApiResponse = require('../models/Response');
 const status = require('../enums/Status');
 
+
+function removeSpecialChars(str) {
+  return str.replace(/[^\w\s]/gi, ''); // This regex matches any character that is not a word character or a space
+}
+
+const processQuery = async (searchQuery) => {
+    const words = new pos.Lexer().lex(searchQuery);
+    const tagger = new pos.Tagger();
+    let taggedWords = tagger.tag(words);
+
+    const nouns = [];
+    for (const taggedWord of taggedWords) {
+        const [word, posTag] = taggedWord;
+        if (posTag.startsWith('NN'))
+        { // Check if the word is a noun
+            nouns.push(word);
+        }
+    }
+    console.log(nouns);
+    const nounsWithoutSpecialChars = nouns.map(str => removeSpecialChars(str));
+    let lowercaseQueries = nounsWithoutSpecialChars.map(str => str.toLowerCase()).sort();
+    const commaSeparatedString = lowercaseQueries.join(', ');
+    return commaSeparatedString;
+}
 
 const sendPromptToLLM = async (prompt, id) => {
     const options = {
@@ -40,7 +65,6 @@ const sendPromptToLLM = async (prompt, id) => {
         console.log('History DB updated')
 
         cache.set(updatedData.request, result.data);
-        console.log(cache);
         return new Promise(resolve => {
             resolve(result)
         })
@@ -73,7 +97,7 @@ const imageProcessing = async (imageUrl, id) => {
             vertices.forEach(v => console.log(`x: ${v.x}, y:${v.y}`));
         });
 
-        console.log(searchQuery)
+        console.log(searchQuery);
         await updateHistoryDB({id: id, status: status.IMAGE_PROCESSED, request: searchQuery});
         console.log("Image Processed");
         return searchQuery;
@@ -108,9 +132,7 @@ const getRecipe = async (req, res) => {
 
     if(featureFlag === "String") {
         const cachedData = cache.get(searchQuery);
-        console.log(cachedData, featureFlag);
         if(cachedData !== undefined) {
-            console.log(cachedData);
             res.status(axios.HttpStatusCode.Ok).json({
                 res: new ApiResponse({llmResponse: cachedData, status: status.RESPONSE_GENERATED}, axios.HttpStatusCode.OK)
             })
@@ -134,12 +156,11 @@ const getRecipe = async (req, res) => {
         if(featureFlag === 'Image') {
             searchQuery = await imageProcessing(searchQuery, savedRecord._id);
         }
+        searchQuery = await processQuery(searchQuery);
+        console.log(searchQuery)
 
         cache.set(searchQuery, 'Response Not Generated');
 
-        console.log(cache)
-
-        searchQuery = searchQuery.replace(/packaged\s+goods|packed\s+goods/gi, '');
         let prompt = "Recommend delicious recipes using edible ingredients with a suitable shelf life from the provided list of labels. Identify items safe for consumption, excluding those expired, rotten, or non-edible. If no edible ingredients are found, prompt: 'Your list contains no edible ingredients. Please re-send the query.' List = "
             + searchQuery
 
