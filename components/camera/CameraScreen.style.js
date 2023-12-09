@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { COLORS, FONT, SIZES } from "../../constants";
+import { COLORS} from "../../constants";
 
 const styles = StyleSheet.create({
   buttonContainer: {
@@ -33,13 +33,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#3498db',
     justifyContent: 'space-between',
     alignItems: 'center',
-    alignSelf: 'center',
     margin: 10,
     height: 30
   },
-  buttonPreviewText: {
-    fontFamily: FONT.medium,
-    color: COLORS.lightWhite
+  loaderContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Darker background
   },
   buttonPreviewContainer: {
     flex: 1,
@@ -47,8 +52,28 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     alignSelf: "center",
-    marginBottom: "10%",
-    justifyContent: 'space-between'
+    justifyContent: 'space-around',
+    paddingVertical: 10,
+  },
+  retakeButton: {
+    backgroundColor: 'tomato',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    height: 40,
+  },
+  submitButton: {
+    backgroundColor: 'limegreen',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    height: 40,
+  },
+  buttonPreviewText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 
